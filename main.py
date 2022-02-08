@@ -19,7 +19,7 @@ class ElementType(Enum):
     Xpath = 7
     Unknown = -1
 
-@app.route("/top/")
+@app.route("/allproject/")
 # Main
 def CrowdWorksAPIMain():
     driver = InitCrowdworks()       # Chromeインスタンスを初期化し、CrowdWorksにアクセス
