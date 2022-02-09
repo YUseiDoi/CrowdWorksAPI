@@ -19,30 +19,42 @@ class ElementType(Enum):
     Xpath = 7
     Unknown = -1
 
-@app.route("/allproject/")
-# Main
-def CrowdWorksAPIMain():
-    driver = InitCrowdworks()       # Chromeインスタンスを初期化し、CrowdWorksにアクセス
-    #webElement = GetWebElement(driver, ElementType.Class, "cw-form_control", 10)        # 検索テキストボックスを取得
-    #webElement.send_keys("VBA")     # VBAと入力
-    #GetWebElement(driver, ElementType.Class, "cw-input_group_button", 10).find_element_by_tag_name("button").click()  # 検索ボタンを押す
+@app.route("/allvbaprojects/")
+def CW_AllVBAProjects():    # get all of VBA projects
+    driver = InitCrowdworks()       # Init Chrome instance and go to CrowdWorks
+    GetWebElement(driver, ElementType.Class, "search_freeword", 10).find_element_by_tag_name("input").send_keys("VBA")      # 検索テキストボックスを取得、VBAと入力
+    GetWebElement(driver, ElementType.Class, "cw-input_group_button", 10).find_element_by_tag_name("button").click()  # 検索ボタンを押す
     eachAnkenName = GetALlAnkenName(driver)
     return render_template('index.html', data=zip(eachAnkenName))
 
-# Chromeインスタンスを生成し、CrowdWorksサイトにアクセスする
+@app.route("/allpythonprojects/")
+def CW_AllPythonProjects():     # get all of Python projects
+    driver = InitCrowdworks()       # Init Chrome instance and go to CrowdWorks
+    GetWebElement(driver, ElementType.Class, "search_freeword", 10).find_element_by_tag_name("input").send_keys("Python")      # 検索テキストボックスを取得、VBAと入力
+    GetWebElement(driver, ElementType.Class, "cw-input_group_button", 10).find_element_by_tag_name("button").click()  # 検索ボタンを押す
+    eachAnkenName = GetALlAnkenName(driver)
+    return render_template('index.html', data=zip(eachAnkenName))
+
+@app.route("/allapiprojects/")
+def CW_AllAPIProjects():        # get all of API projects
+    driver = InitCrowdworks()       # Init Chrome instance and go to CrowdWorks
+    GetWebElement(driver, ElementType.Class, "search_freeword", 10).find_element_by_tag_name("input").send_keys("API")      # 検索テキストボックスを取得、VBAと入力
+    GetWebElement(driver, ElementType.Class, "cw-input_group_button", 10).find_element_by_tag_name("button").click()  # 検索ボタンを押す
+    eachAnkenName = GetALlAnkenName(driver)
+    return render_template('index.html', data=zip(eachAnkenName))
+
+# Init Chrome instance and go to CrowdWorks
 def InitCrowdworks():
-    options = Options()
-    options.add_argument('--headless')
     driver = webdriver.Chrome()
     driver.get("https://crowdworks.jp/public/jobs?category=jobs&order=score&ref=toppage_hedder")
     return driver
 
-# WebElementを取得
+# get WebElement
 def GetWebElement(driver, elementType, elementName, timeout):
-    now = InitTime()    # 時刻を初期化
-    nowTime = int(now.strftime('%Y%m%d%H%M%S'))      # 現在時刻を取得
-    untilTime = nowTime + timeout       # タイムアウト時刻を計算
-    # 現在時刻がタイムアウト時刻を越えるまでループ
+    now = InitTime()    # Init time instance
+    nowTime = int(now.strftime('%Y%m%d%H%M%S'))      # get now time
+    untilTime = nowTime + timeout       # calc timeout
+    # loop until nowtime gets larger than timeout
     while nowTime < untilTime:
         if elementType == ElementType.ID:
             webElement = driver.find_element_by_id(elementName)
@@ -62,15 +74,15 @@ def GetWebElement(driver, elementType, elementName, timeout):
             print("予期せぬエラーが発生しました")
         if webElement != None:
             break
-        nowTime = int(now.strftime('%Y%m%d%H%M%S'))  # 現在時刻を取得
+        nowTime = int(now.strftime('%Y%m%d%H%M%S'))  # get now time
     return webElement
 
-# WebElementを取得
+# get WebElements
 def GetWebElements(driver, elementType, elementName, timeout):
-    now = InitTime()    # 時刻を初期化
-    nowTime = int(now.strftime('%Y%m%d%H%M%S'))      # 現在時刻を取得
-    untilTime = nowTime + timeout       # タイムアウト時刻を計算
-    # 現在時刻がタイムアウト時刻を越えるまでループ
+    now = InitTime()    # Init time instance
+    nowTime = int(now.strftime('%Y%m%d%H%M%S'))      # get now time
+    untilTime = nowTime + timeout       # calc timeout
+    # loop until nowtime gets larger than timeout
     while nowTime < untilTime:
         if elementType == ElementType.ID:
             webElements = driver.find_elements_by_id(elementName)
@@ -90,17 +102,17 @@ def GetWebElements(driver, elementType, elementName, timeout):
             print("予期せぬエラーが発生しました")
         if webElements != None:
             break
-        nowTime = int(now.strftime('%Y%m%d%H%M%S'))  # 現在時刻を取得
+        nowTime = int(now.strftime('%Y%m%d%H%M%S'))  # get now time
     return webElements
 
-# 時刻インスタンスを初期化
+# Init time instance
 def InitTime():
     t_delta = datetime.timedelta(hours=9)
     JST = datetime.timezone(t_delta, 'JST')
     now = datetime.datetime.now(JST)
     return now
 
-# 案件タイトルを全て取得
+# get all of project's name
 def GetALlAnkenName(driver):
     webElements = GetWebElements(driver, ElementType.Class, "item_title", 10)
     eachAnkenName = []
