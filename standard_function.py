@@ -22,8 +22,8 @@ class ChromeOperation:
     def __init__(self):
         option = Options()
         option.add_argument('--headless')
-        #self.driver = webdriver.Chrome(options=option)  # chrome is not visible
-        self.driver = webdriver.Chrome()         # chrome is visible
+        self.driver = webdriver.Chrome(options=option)  # chrome is not visible
+        #self.driver = webdriver.Chrome()         # chrome is visible
         self.driver.get("https://crowdworks.jp/public/jobs?category=jobs&order=score&ref=toppage_hedder")
 
     # get WebElement
