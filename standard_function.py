@@ -101,7 +101,6 @@ class ChromeOperation:
     def GetAllAnkenURLs(self):
         webElements = self.GetWebElements(ElementType.Class, "item_title", 10)
         AllAnkenURL = []
-        i = 0
         for i in range(len(webElements)):
             AllAnkenURL.append(webElements[i].find_element_by_tag_name("a").get_attribute("href"))
         return AllAnkenURL
