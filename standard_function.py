@@ -1,11 +1,9 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from enum import Enum
 import datetime
 from selenium.webdriver.support.select import Select
-import json
-import sys
+from flask import jsonify
 
 # Type of WebElement
 class ElementType(Enum):
@@ -99,6 +97,15 @@ def GetALlAnkenName(driver):
         eachAnkenName.append(eachElement.text)
     return eachAnkenName
 
+# get all project's URL
+def GetAllAnkenURLs(driver):
+    webElements = GetWebElements(driver, ElementType.Class, "job_data_row", 10)
+    eachAnkenURL = []
+    for eachElement in webElements:
+        eachAnkenURL.append(eachElement.text)
+    return eachAnkenURL
+
+
 # get all of project's name
 def GetALlAnken(driver):
     webElements = GetWebElements(driver, ElementType.Class, "item_title", 10)
@@ -122,7 +129,7 @@ def GetNewProjects(driver, keyword):
 
 # Convert data to JSON style
 def ConvertJSON(originalList):
-    jsonString = json.dumps(originalList, indent=4)
+    jsonString = jsonify(originalList)
     return jsonString
 
 # create a list for JSON
