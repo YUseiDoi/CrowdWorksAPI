@@ -4,6 +4,8 @@ from selenium.webdriver.chrome.options import Options
 from enum import Enum
 import datetime
 from selenium.webdriver.support.select import Select
+import json
+import sys
 
 # Type of WebElement
 class ElementType(Enum):
@@ -21,7 +23,8 @@ class ElementType(Enum):
 def InitCrowdworks():
     option = Options()
     option.add_argument('--headless')
-    driver = webdriver.Chrome(options=option)
+    #driver = webdriver.Chrome(options=option)       # chrome is unvisible
+    driver = webdriver.Chrome()         # chrome is visible
     driver.get("https://crowdworks.jp/public/jobs?category=jobs&order=score&ref=toppage_hedder")
     return driver
 
@@ -96,6 +99,11 @@ def GetALlAnkenName(driver):
         eachAnkenName.append(eachElement.text)
     return eachAnkenName
 
+# get all of project's name
+def GetALlAnken(driver):
+    webElements = GetWebElements(driver, ElementType.Class, "item_title", 10)
+    return webElements
+
 # keyword search
 def SearchKeyword(driver, keyword):
     GetWebElement(driver, ElementType.Class, "search_freeword", 10).find_element_by_tag_name("input").send_keys(keyword)      # 検索テキストボックスを取得、VBAと入力
@@ -112,9 +120,16 @@ def GetNewProjects(driver, keyword):
         NewProjects.append(eachElement.text)
     return NewProjects
 
-# check if there is "新着" class
-def CheckNew(webElement):
-    if len(webElement.find_elements_by_class_name("ribbon_job_offer_options")) > 0:
-        return True
-    else:
-        return False
+# Convert data to JSON style
+def ConvertJSON(originalList):
+    jsonString = json.dumps(originalList, indent=4)
+    return jsonString
+
+# create a list for JSON
+def CreateDict(originalDict):
+    i = 1
+    infoDict = {}
+    for eachItem in originalDict:
+        infoDict[i] = eachItem
+        i = i + 1
+    return infoDict
