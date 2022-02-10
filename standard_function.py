@@ -21,8 +21,8 @@ class ElementType(Enum):
 def InitCrowdworks():
     option = Options()
     option.add_argument('--headless')
-    #driver = webdriver.Chrome(options=option)       # chrome is unvisible
-    driver = webdriver.Chrome()         # chrome is visible
+    driver = webdriver.Chrome(options=option)       # chrome is unvisible
+    #driver = webdriver.Chrome()         # chrome is visible
     driver.get("https://crowdworks.jp/public/jobs?category=jobs&order=score&ref=toppage_hedder")
     return driver
 
@@ -99,11 +99,12 @@ def GetALlAnkenName(driver):
 
 # get all project's URL
 def GetAllAnkenURLs(driver):
-    webElements = GetWebElements(driver, ElementType.Class, "job_data_row", 10)
-    eachAnkenURL = []
+    webElements = GetWebElements(driver, ElementType.Class, "item_title", 10)
+    AllAnkenURL = []
+    i = 0
     for eachElement in webElements:
-        eachAnkenURL.append(eachElement.text)
-    return eachAnkenURL
+        AllAnkenURL.append(webElements[i].find_element_by_tag_name("a").get_attribute("href"))
+    return AllAnkenURL
 
 
 # get all of project's name
@@ -117,8 +118,7 @@ def SearchKeyword(driver, keyword):
     GetWebElement(driver, ElementType.Class, "cw-input_group_button", 10).find_element_by_tag_name("button").click()  # 検索ボタンを押す
 
 # get new projects
-def GetNewProjects(driver, keyword):
-    SearchKeyword(driver, keyword)
+def GetNewProjects(driver):
     Select(GetWebElement(driver, ElementType.Class, "cw-pull_left", 10).find_element_by_tag_name("select")).select_by_index(1)      # select 新着
     webElement = GetWebElement(driver, ElementType.Class, "search_results", 10)
     webElements = webElement.find_elements_by_class_name("new")
@@ -129,14 +129,28 @@ def GetNewProjects(driver, keyword):
 
 # Convert data to JSON style
 def ConvertJSON(originalList):
-    jsonString = jsonify(originalList)
-    return jsonString
+    return jsonify({'projects':originalList})
 
 # create a list for JSON
-def CreateDict(originalDict):
-    i = 1
-    infoDict = {}
-    for eachItem in originalDict:
-        infoDict[i] = eachItem
-        i = i + 1
-    return infoDict
+def CreateDict(AllAnkenID, AllAnkenName, AllAnkenURL):
+    AllInfo = []
+    for i in range(len(AllAnkenID)):
+        AllInfo.append("{id: " + str(AllAnkenID[i]) + ", title: " + AllAnkenName[i] + ", url: " + AllAnkenURL[i] + "}")
+    return AllInfo
+
+# craete ID list for json
+def CreateAnkenID(AnkenList):
+    IDList = {}
+    for i in range(len(AnkenList)):
+        IDList[i] = i
+    return IDList
+
+# all process from getting information to convert that json
+def GetInfoAndCreateJSON(driver):
+    ALlAnkenName = GetALlAnkenName(driver)         # get all of project's name
+    AllAnkenURL = GetAllAnkenURLs(driver)          # get all of project's URL
+    ALlAnkenID = CreateAnkenID(AllAnkenURL)         # create ID list for json
+    driver.close()
+    infoDict = CreateDict(ALlAnkenID, ALlAnkenName, AllAnkenURL)            # create lists for JSON
+    jsonData = ConvertJSON(infoDict)            # convert to JSON style
+    return jsonData
