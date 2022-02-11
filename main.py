@@ -5,6 +5,16 @@ import os
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False         # change character code
 
+@app.route("/")
+def CW_AllTopProjects():            # get all of VBA projects
+    myChromeOperation = ChromeOperation()                   # create new instance of ChromeOperation
+    myDataOperation = DataOperation()                   # create new instance of DataOperation
+    ALlAnkenID, ALlAnkenName, AllAnkenURL = myChromeOperation.GetAllInformation()                   # get information id, title, url
+    myChromeOperation.CloseChrome                   # close chrome instance
+    infoDict = myDataOperation.CreateDict(ALlAnkenID, ALlAnkenName, AllAnkenURL)        # create lists for JSON
+    jsonData = myDataOperation.ConvertJSON(infoDict)            # convert to JSON style
+    return render_template('index.html', status_code=("status_code: " + str(jsonData.status_code)), json_data=jsonData.json)
+
 @app.route("/vba/all/")
 def CW_AllVBAProjects():            # get all of VBA projects
     myChromeOperation = ChromeOperation()                   # create new instance of ChromeOperation
