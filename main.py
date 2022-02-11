@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from standard_function import ChromeOperation, DataOperation
+import os
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False         # change character code
@@ -81,3 +82,5 @@ def CW_KeywordSearch(keyword):
     jsonData = myDataOperation.ConvertJSON(infoDict)            # convert to JSON style
     return render_template('index.html', status_code=("status_code: " + str(jsonData.status_code)), json_data=jsonData.json)
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
