@@ -18,7 +18,7 @@ You can get various information from the following uris. <br>
   * You can get information about API.
 * https://crowdworksapi.herokuapp.com/api/new/
   * You can get the latest information about API.
-* https://crowdworksapi.herokuapp.com/search/<keyword>/
+* https://crowdworksapi.herokuapp.com/search/keyword/
   * You can get information about keyword you set.
 
 <h4>Note: You may not use this for commercial purposes.</h4> 
