@@ -150,8 +150,7 @@ class DataOperation:
     def CreateDict(self, AllAnkenID, AllAnkenName, AllAnkenURL):
         AllInfo = []
         for i in range(len(AllAnkenID)):
-            AllInfo.append(
-                "{id: " + str(AllAnkenID[i]) + ", title: " + AllAnkenName[i] + ", url: " + AllAnkenURL[i] + "}")
+            AllInfo.append(dict(id=AllAnkenID[i], title=AllAnkenName[i], url=AllAnkenURL[i]))
         return AllInfo
 
     # craete ID list for json
