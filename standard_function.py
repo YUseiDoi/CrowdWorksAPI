@@ -20,10 +20,15 @@ class ElementType(Enum):
 # Selenium Class
 class ChromeOperation:
     def __init__(self):
-        option = Options()
-        option.add_argument('--headless')
-        self.driver = webdriver.Chrome(options=option)  # chrome is not visible
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--remote-debugging-port=9222')
+        self.driver = webdriver.Chrome(options=options)  # chrome is not visible
         #self.driver = webdriver.Chrome()         # chrome is visible
+        self.driver.set_window_size(950, 800)       # make chrome window small
         self.driver.get("https://crowdworks.jp/public/jobs?category=jobs&order=score&ref=toppage_hedder")
 
     # get WebElement
