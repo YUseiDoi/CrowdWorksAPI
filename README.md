@@ -24,6 +24,6 @@ You can get various information from the following uris. <br>
 <h4>Note: You may not use this for commercial purposes.</h4> 
 
 <h4>Edit(2022/03/03)</h4>
-* I realised that this API dosen't work properly and the problem is a lackage of memory for Chrome instance.
-* So, I fixed it by setting additional options to minimize a memory for Chrome instance.
-* Now that you can use this API properly.
+I realised that this API dosen't work properly and the problem is a lackage of memory for Chrome instance.<br>
+So, I fixed it by setting additional options to minimize a memory for Chrome instance.<br>
+Now that you can use this API properly.
